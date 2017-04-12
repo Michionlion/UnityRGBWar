@@ -1,12 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public enum TileType {
-	RED,
-	GREEN,
-	BLUE,
-	NOTYPE
-}
+public enum TileType { RED, GREEN, BLUE, NOTYPE }
 
 public class World : MonoBehaviour {
 		
