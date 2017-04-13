@@ -49,6 +49,7 @@
      <Compile Include="Assets\Assets\Code\Player\Player.cs" />
      <Compile Include="Assets\Assets\Code\World\Tile.cs" />
      <Compile Include="Assets\Assets\Code\World\World.cs" />
+     <Compile Include="Assets\MoveCamera.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/opt/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

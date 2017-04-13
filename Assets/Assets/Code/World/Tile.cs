@@ -10,24 +10,22 @@ class Tile : MonoBehaviour {
 			return _type;
 		}
 		set {
-			if(spRen == null) {
-				spRen = gameObject.GetComponent<SpriteRenderer>();
-			}
+			
 			_type = value;
-			switch(_type) {
-			case TileType.BLUE:
-				spRen.color = Color.blue;
-				break;
-			case TileType.GREEN:
-				spRen.color = Color.green;
-				break;
-			case TileType.RED:
-				spRen.color = Color.red;
-				break;
-			case TileType.NOTYPE:
-				spRen.color = Color.grey;
-				break;
-			}
+			if(spRen != null) switch(_type) {
+				case TileType.BLUE:
+					spRen.color = Color.blue;
+					break;
+				case TileType.GREEN:
+					spRen.color = Color.green;
+					break;
+				case TileType.RED:
+					spRen.color = Color.red;
+					break;
+				case TileType.NOTYPE:
+					spRen.color = Color.grey;
+					break;
+				}
 		}
 	}
 
@@ -38,5 +36,12 @@ class Tile : MonoBehaviour {
 
 	public Tile(Player p, TileType t = TileType.NOTYPE) {
 		type = t;
+	}
+
+	public void Awake() {
+		if(spRen == null) {
+			spRen = gameObject.GetComponent<SpriteRenderer>();
+		}
+		type = _type;
 	}
 }
