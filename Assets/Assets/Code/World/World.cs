@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public enum TileType { RED, GREEN, BLUE, NOTYPE }
+public enum TileType {
+	RED,
+	GREEN,
+	BLUE,
+	NOTYPE
+
+}
 
 public class World : MonoBehaviour {
 		
 	readonly Tile[,] tiles;
 	public GameObject TileProto;
 
-	public int Width = 200;
-	public int Height = 200;
+	public int Width = 15;
+	public int Height = 15;
 
 	public World() {
 		tiles = new Tile[Width, Height];
@@ -24,8 +30,9 @@ public class World : MonoBehaviour {
 			for(int y = 0; y < Height; y++) {
 				var gn = Instantiate(TileProto, new Vector3(x, y, 0), Quaternion.Euler(0, 0, 0), transform);
 				tiles[x, y] = gn.GetComponent<Tile>();
-				int r = Random.Range(0, 2);
+				int r = Random.Range(0, 3);
 				tiles[x, y].type = r == 0 ? TileType.RED : (r == 1 ? TileType.BLUE : TileType.GREEN);
+				Player.Neutral.add(tiles[x, y]);
 			}
 		}
 	}
