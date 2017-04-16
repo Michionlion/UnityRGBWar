@@ -28,7 +28,7 @@ public class World : MonoBehaviour {
 //		Instance = this;
 	}
 
-	public void Init() {
+	private void Init() {
 		Instance = this;
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
@@ -49,17 +49,21 @@ public class World : MonoBehaviour {
 		else return tiles[x, y];
 	}
 
+	public void Refresh() {
+		for(int x = 0; x < Width; x++)
+			for(int y = 0; y < Height; y++)
+				Destroy(tiles[x, y].gameObject);
+		Player.Neutral.reset();
+		Player.Player1.reset();
+		Player.Player2.reset();
+		Player.Player3.reset();
+		Player.Player4.reset();
+		Init();
+	}
+
 	public void Update() {
 		if(Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftShift)) {
-			for(int x = 0; x < Width; x++)
-				for(int y = 0; y < Height; y++)
-					Destroy(tiles[x, y].gameObject);
-			Player.Neutral.reset();
-			Player.Player1.reset();
-			Player.Player2.reset();
-			Player.Player3.reset();
-			Player.Player4.reset();
-			Init();
+			
 
 		}
 	}

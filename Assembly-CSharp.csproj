@@ -52,6 +52,7 @@
      <Compile Include="Assets\Assets\Code\RenderEffects.cs" />
      <Compile Include="Assets\Assets\Code\World\Tile.cs" />
      <Compile Include="Assets\Assets\Code\World\World.cs" />
+     <None Include="Assets\Assets\Code\Shaders\Bloom.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/opt/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
