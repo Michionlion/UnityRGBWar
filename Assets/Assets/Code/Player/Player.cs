@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class Player {
 	public string name;
-	public static readonly Player Neutral = new Player("Neutral", Color.black);
-	public static readonly Player Player1 = new Player("Player1", new Color(100, 0, 100));
-	public static readonly Player Player2 = new Player("Player2", new Color(100, 150, 0));
-	public static readonly Player Player3 = new Player("Player3", new Color(0, 100, 150));
-	public static readonly Player Player4 = new Player("Player4", new Color(100, 50, 50));
+	public static readonly Player Neutral = new Player("Neutral", new Color(0 / 256f, 0 / 256f, 0 / 256f));
+	public static readonly Player Player1 = new Player("Player1", new Color(100 / 256f, 0 / 256f, 100 / 256f));
+	public static readonly Player Player2 = new Player("Player2", new Color(100 / 256f, 150 / 256f, 0 / 256f));
+	public static readonly Player Player3 = new Player("Player3", new Color(0 / 256f, 100 / 256f, 150 / 256f));
+	public static readonly Player Player4 = new Player("Player4", new Color(175 / 256f, 50 / 256f, 50 / 256f));
 
 	public string RGB = "R:0 G:0 B:0";
 
@@ -25,8 +25,8 @@ public class Player {
 	}
 
 	public void remove(Tile t) {
-		t.owner = null;
-		switch(t.type) {
+		t.Owner = null;
+		switch(t.Type) {
 		case TileType.BLUE:
 			B.Remove(t);
 			break;
@@ -56,8 +56,8 @@ public class Player {
 	}
 
 	public void add(Tile t) {
-		t.owner = this;
-		switch(t.type) {
+		t.Owner = this;
+		switch(t.Type) {
 		case TileType.BLUE:
 			B.AddLast(t);
 			break;
@@ -69,6 +69,11 @@ public class Player {
 			break;
 		}
 		RGB = "R:" + R.Count + " G:" + G.Count + " B:" + B.Count;
+	}
+
+	public bool Equals(Player other) {
+		
+		return name == (other != null ? other.name : null);
 	}
 
 }

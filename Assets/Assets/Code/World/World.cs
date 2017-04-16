@@ -35,8 +35,10 @@ public class World : MonoBehaviour {
 				var gn = Instantiate(TileProto, new Vector3(x, y, 0), Quaternion.Euler(0, 0, 0), transform);
 				gn.name = "Tile(" + x + ", " + y + ")";
 				tiles[x, y] = gn.GetComponent<Tile>();
+				tiles[x, y].x = x;
+				tiles[x, y].y = y;
 				int r = Random.Range(0, 100);
-				tiles[x, y].type = r < 22 ? TileType.GREEN : (r > 61 ? TileType.BLUE : TileType.RED);
+				tiles[x, y].Type = r < 22 ? TileType.GREEN : (r > 61 ? TileType.BLUE : TileType.RED);
 				Player.Neutral.add(tiles[x, y]);
 			}
 		}

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.ComponentModel;
 
 public class Tile : MonoBehaviour {
 
@@ -12,10 +11,15 @@ public class Tile : MonoBehaviour {
 	public const int WEST = 6;
 	public const int NORTH_WEST = 7;
 
+	[SerializeField]
 	private TileType _type;
+	[SerializeField]
 	private Player _owner;
 
-	public TileType type {
+	[SerializeField]
+	private string ownerName;
+
+	public TileType Type {
 		get {
 			return _type;
 		}
@@ -25,13 +29,18 @@ public class Tile : MonoBehaviour {
 		}
 	}
 
-	public Player owner {
+	public Player Owner {
 		get {
 			return _owner;
 		}
 		set {
 			_owner = value;
-			doBorder();
+			ownerName = _owner != null ? _owner.name : "null";
+			if(_owner != null) {
+				doBorder(true); //ensure borders are only called when adding to a player, not removing
+				doInside();
+			}
+			doIcon();
 		}
 	}
 
@@ -41,14 +50,15 @@ public class Tile : MonoBehaviour {
 	public SpriteRenderer[] border;
 	public SpriteRenderer playerIcon;
 
-	public readonly int x, y;
+	[HideInInspector]
+	public int x, y;
 
-	public Tile(int x, int y) : this(x, y, Player.Neutral) {
+	public Tile() : this(0, 0, Player.Neutral) {
 	}
 
 	public Tile(int x, int y, Player p, TileType t = TileType.NOTYPE) {
-		type = t;
-		owner = p;
+		Type = t;
+		Owner = p;
 		this.x = x;
 		this.y = y;
 	}
@@ -56,6 +66,7 @@ public class Tile : MonoBehaviour {
 	public void Start() {
 		doInside();
 		doBorder();
+		doIcon();
 	}
 
 	int mode = 0;
@@ -101,48 +112,85 @@ public class Tile : MonoBehaviour {
 
 	}
 
+	private void colorize(int b) {
+		border[b].color = Color.Lerp(Color.clear, _owner.playerColor, 0.4f);
+	}
+
 	public void doBorder(bool doN = false) {
+		if(_owner == null) {
+			Debug.Log("Tile without owner!!");
+			return;
+		}
 		if(border != null) {
-			bool northE = getTile(0, 1) != null;
-			bool southE = getTile(0, -1) != null;
-			bool eastE = getTile(1, 0) != null;
-			bool westE = getTile(-1, 0) != null;
-			bool north = northE && getTile(0, 1).owner == owner;
-			bool south = southE && getTile(0, -1).owner == owner;
-			bool east = eastE && getTile(1, 0).owner == owner;
-			bool west = westE && getTile(-1, 0).owner == owner;
 
 			foreach(var s in border) {
-				if(owner != null) s.color = owner.playerColor;
+				s.color = _owner.playerColor;
 			}
-			if(north) border[NORTH].color = getTTColor();
-			if(north && east) border[NORTH_EAST].color = getTTColor();
-			if(north && west) border[NORTH_WEST].color = getTTColor();
-			if(south) border[SOUTH].color = getTTColor();
-			if(south && east) border[SOUTH_EAST].color = getTTColor();
-			if(south && west) border[SOUTH_WEST].color = getTTColor();
-			if(east) border[EAST].color = getTTColor();
-			if(west) border[WEST].color = getTTColor();
+
+			Tile northT = getTile(0, 1);
+			Tile southT = getTile(0, -1);
+			Tile eastT = getTile(1, 0);
+			Tile westT = getTile(-1, 0);
+			Tile northwestT = getTile(-1, 1);
+			Tile northeastT = getTile(1, 1);
+			Tile southwestT = getTile(-1, -1);
+			Tile southeastT = getTile(1, -1);
+
+			bool northE = northT != null;
+			bool southE = southT != null;
+			bool eastE = eastT != null;
+			bool westE = westT != null;
+			bool northwestE = northwestT != null;
+			bool northeastE = northeastT != null;
+			bool southwestE = southwestT != null;
+			bool southeastE = southeastT != null;
+
+			bool north = northE && _owner.Equals(northT.Owner);
+			bool south = southE && _owner.Equals(southT.Owner);
+			bool east = eastE && _owner.Equals(eastT.Owner);
+			bool west = westE && _owner.Equals(westT.Owner);
+			bool northeast = northeastE && _owner.Equals(northeastT.Owner);
+			bool northwest = northwestE && _owner.Equals(northwestT.Owner);
+			bool southeast = southeastE && _owner.Equals(southeastT.Owner);
+			bool southwest = southwestE && _owner.Equals(southwestT.Owner);
+
+
+			if(north) colorize(NORTH);
+			if(south) colorize(SOUTH);
+			if(east) colorize(EAST);
+			if(west) colorize(WEST);
+
+			if(northeast && north && east) colorize(NORTH_EAST);
+			if(northwest && north && west) colorize(NORTH_WEST);
+			if(southeast && south && east) colorize(SOUTH_EAST);
+			if(southwest && south && west) colorize(SOUTH_WEST);
 
 			if(doN) {
-				if(northE) getTile(0, 1).doBorder();
-				if(northE && eastE) getTile(1, 1).doBorder();
-				if(northE && westE) getTile(-1, 1).doBorder();
-				if(southE) getTile(0, -1).doBorder();
-				if(southE && eastE) getTile(1, -1).doBorder();
-				if(southE && westE) getTile(-1, -1).doBorder();
-				if(eastE) getTile(1, 0).doBorder();
-				if(westE) getTile(-1, 0).doBorder();
+				if(northE) northT.doBorder();
+				if(northeastE) getTile(1, 1).doBorder();
+				if(northwestE) getTile(-1, 1).doBorder();
+				if(southE) southT.doBorder();
+				if(southeastE) getTile(1, -1).doBorder();
+				if(southwestE) getTile(-1, -1).doBorder();
+				if(eastE) eastT.doBorder();
+				if(westE) westT.doBorder();
 			}
 		}
 	}
 
 	public void doInside() {
-		if(inside != null) inside.color = getTTColor();
+		Color c = getTTColor();
+		if(_owner != null) {
+			Color o = _owner.playerColor;
+			c.r += o.r / 2f;
+			c.g += o.g / 2f;
+			c.b += o.b / 2f;
+		}
+		if(inside != null) inside.color = c;
 	}
 
 	public Color getTTColor() {
-		switch(type) {
+		switch(Type) {
 		case TileType.RED:
 			return Color.red;
 		case TileType.GREEN:
@@ -154,5 +202,9 @@ public class Tile : MonoBehaviour {
 		default:
 			return Color.black;
 		}
+	}
+
+	public void doIcon() {
+		if(playerIcon != null) playerIcon.color = _owner != null ? _owner.playerColor : Color.clear;
 	}
 }
